@@ -8,12 +8,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GlobalContext } from "../../App";
 import LogVirtualView from "../../components/LogView/LogVirtualView";
 import TitleCard from "../../components/TitleCard";
 import { getJmap, getJstack, getJstat } from "../../service/util";
+
+const PERFETTO_UI_URL = "https://ui.perfetto.dev/";
 
 const CMDResult = () => {
   const { cmd, ip, pid } = useParams() as {
@@ -25,7 +26,7 @@ const CMDResult = () => {
   const [option, setOption] = useState("gcutil");
   const [numIterations, setNumIterations] = useState(4);
   const [traceLoading, setTraceLoading] = useState(false);
-  const { themeMode } = useContext(GlobalContext);
+  const [traceSuccess, setTraceSuccess] = useState(false);
   const executeJstat = useCallback(
     () =>
       getJstat(ip, pid, option)
@@ -81,10 +82,11 @@ const CMDResult = () => {
       a.remove();
 
       setResult(
-        `Torch trace downloaded.\n\n` +
+        `Torch trace downloaded successfully!\n\n` +
           `The trace was captured for ${numIterations} training iterations.\n` +
-          `The trace can be viewed in Chrome's chrome://tracing or Perfetto UI.`,
+          `Drag and drop the downloaded file into Perfetto UI to view it.`,
       );
+      setTraceSuccess(true);
     } catch (error) {
       setResult(
         `Failed to capture Torch trace. Error: ${(error as Error).message}\n\n` +
@@ -93,6 +95,7 @@ const CMDResult = () => {
           `2. The process is running a PyTorch training script.\n` +
           `3. The 'dynolog' package is installed on the node.`,
       );
+      setTraceSuccess(false);
     } finally {
       setTraceLoading(false);
     }
@@ -128,8 +131,7 @@ const CMDResult = () => {
       case "torchtrace":
         setResult(
           `Click "Start Trace" to capture a Torch GPU profiling trace.\n\n` +
-            `This will profile ${numIterations} training iterations (calls to optimizer.step()).\n` +
-            `The trace can be viewed in Chrome's chrome://tracing or Perfetto UI.`,
+            `This will profile ${numIterations} training iterations (calls to optimizer.step()).`,
         );
         break;
       default:
@@ -208,11 +210,27 @@ const CMDResult = () => {
         )}
       </TitleCard>
       <TitleCard title={`IP: ${ip} / Pid: ${pid}`}>
+        {traceSuccess && cmd === "torchtrace" && (
+          <Box sx={{ mb: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              href={PERFETTO_UI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open Perfetto UI
+            </Button>
+            <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
+              Drag and drop the downloaded trace file into Perfetto to view it.
+            </Typography>
+          </Box>
+        )}
         <LogVirtualView
           content={result || "loading"}
           language="prolog"
           height={800}
-          theme={themeMode}
+          theme="light"
         />
       </TitleCard>
     </Box>
