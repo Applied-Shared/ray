@@ -283,6 +283,15 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
         <CpuStackTraceLink pid={pid} ip={ip} type="" />
         <br />
         <MemoryProfilingButton pid={pid} ip={ip} />
+        {cmdline[0] === "python" && coreWorker?.ipAddress && (
+          <Link
+            component={RouterLink}
+            to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
+            target="_blank"
+          >
+            Torch Trace
+          </Link>
+        )}
       </TableCell>
       <TableCell>
         <PercentageBar num={Number(cpu)} total={100}>
