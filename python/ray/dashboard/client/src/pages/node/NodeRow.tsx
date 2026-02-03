@@ -22,13 +22,29 @@ import {
 import PercentageBar from "../../components/PercentageBar";
 import { StatusChip } from "../../components/StatusChip";
 import { getNodeDetail } from "../../service/node";
-import { NodeDetail } from "../../type/node";
+import { GPUStats, NodeDetail } from "../../type/node";
 import { Worker } from "../../type/worker";
 import { memoryConverter } from "../../util/converter";
 import { NodeGPUView, WorkerGpuRow } from "./GPUColumn";
 import { NodeGRAM, WorkerGRAM } from "./GRAMColumn";
 
 const TEXT_COL_MIN_WIDTH = 100;
+
+/**
+ * Check if a worker is using any GPU based on GPU process list.
+ * Used to determine if Torch Trace should be shown for the worker.
+ */
+const isWorkerUsingGpu = (
+  workerPID: number | null,
+  gpus?: GPUStats[],
+): boolean => {
+  if (!workerPID || !gpus) {
+    return false;
+  }
+  return gpus.some((gpu) =>
+    gpu.processesPids?.some((process) => process.pid === workerPID),
+  );
+};
 
 type NodeRowProps = Pick<NodeRowsProps, "node"> & {
   /**
@@ -283,14 +299,17 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
         <CpuStackTraceLink pid={pid} ip={ip} type="" />
         <br />
         <MemoryProfilingButton pid={pid} ip={ip} />
-        {cmdline[0] === "python" && coreWorker?.ipAddress && (
-          <Link
-            component={RouterLink}
-            to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
-            target="_blank"
-          >
-            Torch Trace
-          </Link>
+        {coreWorker?.ipAddress && isWorkerUsingGpu(pid, node.gpus) && (
+          <React.Fragment>
+            <Link
+              component={RouterLink}
+              to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
+              target="_blank"
+            >
+              Torch Trace
+            </Link>
+          </React.Fragment>
+        )}
         )}
       </TableCell>
       <TableCell>
