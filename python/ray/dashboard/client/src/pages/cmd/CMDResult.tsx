@@ -44,7 +44,8 @@ const CMDResult = () => {
   const executeTorchTrace = useCallback(async () => {
     setTraceLoading(true);
     setResult(
-      "Starting Torch trace... This may take a few minutes depending on the number of iterations.",
+      "Starting Torch trace... This may take a few minutes depending on the number of iterations.\n" +
+        "Server timeout is 5 minutes.",
     );
     try {
       const url = `/worker/gpu_profile?ip=${encodeURIComponent(
@@ -65,7 +66,9 @@ const CMDResult = () => {
       a.style.display = "none";
       a.href = downloadUrl;
 
-      let filename = "gputrace.json";
+      const now = new Date();
+      const dateStr = now.toISOString().replace(/[:.]/g, "-").slice(0, 19);
+      let filename = `gputrace_${dateStr}.json`;
       const contentDisposition = response.headers.get("content-disposition");
       if (contentDisposition) {
         const filenameMatch = contentDisposition.match(/filename="(.+)"/);
@@ -81,8 +84,10 @@ const CMDResult = () => {
       window.URL.revokeObjectURL(downloadUrl);
       a.remove();
 
+      const timestamp = new Date().toLocaleString();
       setResult(
         `Torch trace downloaded successfully!\n\n` +
+          `Captured at: ${timestamp}\n` +
           `The trace was captured for ${numIterations} training iterations.\n` +
           `Drag and drop the downloaded file into Perfetto UI to view it.`,
       );

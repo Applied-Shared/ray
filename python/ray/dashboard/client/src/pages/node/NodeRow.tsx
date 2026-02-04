@@ -299,18 +299,21 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
         <CpuStackTraceLink pid={pid} ip={ip} type="" />
         <br />
         <MemoryProfilingButton pid={pid} ip={ip} />
-        {coreWorker?.ipAddress && isWorkerUsingGpu(pid, node.gpus) && (
-          <React.Fragment>
-            <Link
-              component={RouterLink}
-              to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
-              target="_blank"
-            >
-              Torch Trace
-            </Link>
-          </React.Fragment>
-        )}
-        )}
+        {node.gpuProfilingEnabled &&
+          worker.language === "PYTHON" &&
+          coreWorker?.ipAddress &&
+          isWorkerUsingGpu(pid, node.gpus) && (
+            <React.Fragment>
+              <br />
+              <Link
+                component={RouterLink}
+                to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
+                target="_blank"
+              >
+                Torch Trace
+              </Link>
+            </React.Fragment>
+          )}
       </TableCell>
       <TableCell>
         <PercentageBar num={Number(cpu)} total={100}>
