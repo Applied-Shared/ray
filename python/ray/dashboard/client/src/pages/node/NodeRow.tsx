@@ -22,29 +22,13 @@ import {
 import PercentageBar from "../../components/PercentageBar";
 import { StatusChip } from "../../components/StatusChip";
 import { getNodeDetail } from "../../service/node";
-import { GPUStats, NodeDetail } from "../../type/node";
+import { NodeDetail } from "../../type/node";
 import { Worker } from "../../type/worker";
 import { memoryConverter } from "../../util/converter";
 import { NodeGPUView, WorkerGpuRow } from "./GPUColumn";
 import { NodeGRAM, WorkerGRAM } from "./GRAMColumn";
 
 const TEXT_COL_MIN_WIDTH = 100;
-
-/**
- * Check if a worker is using any GPU based on GPU process list.
- * Used to determine if Torch Trace should be shown for the worker.
- */
-const isWorkerUsingGpu = (
-  workerPID: number | null,
-  gpus?: GPUStats[],
-): boolean => {
-  if (!workerPID || !gpus) {
-    return false;
-  }
-  return gpus.some((gpu) =>
-    gpu.processesPids?.some((process) => process.pid === workerPID),
-  );
-};
 
 type NodeRowProps = Pick<NodeRowsProps, "node"> & {
   /**
@@ -301,8 +285,7 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
         <MemoryProfilingButton pid={pid} ip={ip} />
         {node.gpuProfilingEnabled &&
           worker.language === "PYTHON" &&
-          coreWorker?.ipAddress &&
-          isWorkerUsingGpu(pid, node.gpus) && (
+          coreWorker?.ipAddress && (
             <React.Fragment>
               <br />
               <Link
