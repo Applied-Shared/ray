@@ -285,7 +285,8 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
         <MemoryProfilingButton pid={pid} ip={ip} />
         {node.gpuProfilingEnabled &&
           worker.language === "PYTHON" &&
-          coreWorker?.ipAddress && (
+          coreWorker?.ipAddress &&
+          !cmdline[0]?.includes("IDLE") && (
             <React.Fragment>
               <br />
               <Link
