@@ -287,16 +287,13 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
           worker.language === "PYTHON" &&
           coreWorker?.ipAddress &&
           !cmdline[0]?.includes("IDLE") && (
-            <React.Fragment>
-              <br />
-              <Link
-                component={RouterLink}
-                to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
-                target="_blank"
-              >
-                Torch Trace
-              </Link>
-            </React.Fragment>
+            <Link
+              component={RouterLink}
+              to={`/cmd/torchtrace/${coreWorker.ipAddress}/${pid}`}
+              target="_blank"
+            >
+              Torch Trace
+            </Link>
           )}
       </TableCell>
       <TableCell>
