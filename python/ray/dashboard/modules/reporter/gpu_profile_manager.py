@@ -90,7 +90,7 @@ class GpuProfilingManager:
 
     @property
     def dynolog_available(self) -> bool:
-        """Check if dynolog binaries are installed (regardless of GPUs)."""
+        """Check if dynolog binaries are installed on the node."""
         return self._dynolog_bin is not None and self._dyno_bin is not None
 
     @property
