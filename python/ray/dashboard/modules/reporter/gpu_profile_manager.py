@@ -194,6 +194,12 @@ class GpuProfilingManager:
                 ip_address=self._ip_address
             )
 
+        if not (1 <= num_iterations <= 100):
+            return False, (
+                f"Invalid num_iterations={num_iterations}. "
+                "Must be between 1 and 100."
+            )
+
         if not self._dynolog_daemon_process:
             raise RuntimeError("Must call `start_monitoring_daemon` before profiling.")
 

@@ -195,7 +195,9 @@ const CMDResult = () => {
                   size="small"
                   value={numIterations}
                   onChange={(e) =>
-                    setNumIterations(Math.max(1, parseInt(e.target.value) || 1))
+                    setNumIterations(
+                      Math.min(100, Math.max(1, parseInt(e.target.value) || 1)),
+                    )
                   }
                   inputProps={{ min: 1, max: 100 }}
                   helperText="Number of optimizer.step() calls to profile"
