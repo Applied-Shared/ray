@@ -43,6 +43,7 @@ const CMDResult = () => {
 
   const executeTorchTrace = useCallback(async () => {
     setTraceLoading(true);
+    setTraceSuccess(false);
     setResult(
       "Starting Torch trace... This may take a few minutes depending on the number of iterations.\n" +
         "Server timeout is 5 minutes.",
@@ -136,14 +137,14 @@ const CMDResult = () => {
       case "torchtrace":
         setResult(
           `Click "Start Trace" to capture a Torch GPU profiling trace.\n\n` +
-            `This will profile ${numIterations} training iterations (calls to optimizer.step()).`,
+            `Configure the number of training iterations (calls to optimizer.step()) to profile, then click Start Trace.`,
         );
         break;
       default:
         setResult(`Command ${cmd} is not supported.`);
         break;
     }
-  }, [cmd, executeJstat, ip, pid, numIterations]);
+  }, [cmd, executeJstat, ip, pid]);
 
   return (
     <Box sx={{ padding: 4, width: "100%" }}>

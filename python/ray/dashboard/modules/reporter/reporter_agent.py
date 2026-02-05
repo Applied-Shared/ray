@@ -820,7 +820,7 @@ class ReporterAgent(
             "disk_io_speed": disk_speed_stats,
             "gpus": self._get_gpu_usage(),
             "gpuProfilingEnabled": (
-                self._gpu_profiling_manager.dynolog_available
+                self._gpu_profiling_manager.enabled
                 and self._gpu_profiling_manager.is_monitoring_daemon_running
             ),
             "network": network_stats,
