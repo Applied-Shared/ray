@@ -155,33 +155,16 @@ const CMDResult = () => {
         executeJstat();
         break;
       case "torchtrace":
-<<<<<<< HEAD
         setResult(
           `Click "Start Trace" to capture a Torch GPU profiling trace.\n\n` +
-            `Configure the number of training iterations (calls to optimizer.step()) to profile, then click Start Trace.`,
+            `Choose iterations or duration mode, configure the value, then click Start Trace.`,
         );
-=======
-        {
-          const modeDescription =
-            profilingMode === "iterations"
-              ? `${numIterations} training iterations (calls to optimizer.step())`
-              : `${durationSeconds} seconds`;
-          setResult(
-            `Click "Start Trace" to capture a Torch GPU profiling trace.\n\n` +
-              `This will profile for ${modeDescription}.`,
-          );
-        }
->>>>>>> 835255ad65 (Add duration-based GPU profiling support)
         break;
       default:
         setResult(`Command ${cmd} is not supported.`);
         break;
     }
-<<<<<<< HEAD
   }, [cmd, executeJstat, ip, pid]);
-=======
-  }, [cmd, executeJstat, ip, pid, numIterations, profilingMode, durationSeconds]);
->>>>>>> 835255ad65 (Add duration-based GPU profiling support)
 
   return (
     <Box sx={{ padding: 4, width: "100%" }}>
@@ -246,21 +229,6 @@ const CMDResult = () => {
             </FormControl>
             <Grid container spacing={2} alignItems="center">
               <Grid item>
-<<<<<<< HEAD
-                <TextField
-                  label="Iterations"
-                  type="number"
-                  size="small"
-                  value={numIterations}
-                  onChange={(e) =>
-                    setNumIterations(
-                      Math.min(100, Math.max(1, parseInt(e.target.value) || 1)),
-                    )
-                  }
-                  inputProps={{ min: 1, max: 100 }}
-                  helperText="Number of optimizer.step() calls to profile"
-                />
-=======
                 {profilingMode === "iterations" ? (
                   <TextField
                     label="Iterations"
@@ -269,7 +237,7 @@ const CMDResult = () => {
                     value={numIterations}
                     onChange={(e) =>
                       setNumIterations(
-                        Math.max(1, parseInt(e.target.value) || 1),
+                        Math.min(100, Math.max(1, parseInt(e.target.value) || 1)),
                       )
                     }
                     inputProps={{ min: 1, max: 100 }}
@@ -283,14 +251,13 @@ const CMDResult = () => {
                     value={durationSeconds}
                     onChange={(e) =>
                       setDurationSeconds(
-                        Math.max(1, parseInt(e.target.value) || 1),
+                        Math.min(300, Math.max(1, parseInt(e.target.value) || 1)),
                       )
                     }
                     inputProps={{ min: 1, max: 300 }}
                     helperText="Time in seconds to profile (for data loaders)"
                   />
                 )}
->>>>>>> 835255ad65 (Add duration-based GPU profiling support)
               </Grid>
               <Grid item>
                 <Button
