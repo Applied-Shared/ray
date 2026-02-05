@@ -70,7 +70,15 @@ export const ExpandableTableRow = ({
             size="large"
           >
             {length}
-            {isExpanded ? <KeyboardArrowDown /> : <KeyboardArrowRight />}
+            {isExpanded ? (
+              <KeyboardArrowDown
+                sx={(theme) => ({ color: theme.palette.text.secondary })}
+              />
+            ) : (
+              <KeyboardArrowRight
+                sx={(theme) => ({ color: theme.palette.text.secondary })}
+              />
+            )}
           </IconButton>
         </TableCell>
         {children}
@@ -111,10 +119,12 @@ const RayletWorkerTable = ({
   workers = [],
   actorMap,
   mini,
+  gpuProfilingEnabled,
 }: {
   workers: Worker[];
   actorMap: { [actorId: string]: ActorDetail };
   mini?: boolean;
+  gpuProfilingEnabled?: boolean;
 }) => {
   const { changeFilter, filterFunc } = useFilter();
   const [key, setKey] = useState("");
@@ -273,6 +283,21 @@ const RayletWorkerTable = ({
                           }}
                         >
                           jstat
+                        </Button>
+                      </div>
+                    ) : language === "PYTHON" &&
+                      gpuProfilingEnabled &&
+                      coreWorkerStats[0]?.ipAddress &&
+                      !cmdline[0]?.includes("IDLE") ? (
+                      <div>
+                        <Button
+                          onClick={() => {
+                            window.open(
+                              `#/cmd/torchtrace/${coreWorkerStats[0]?.ipAddress}/${pid}`,
+                            );
+                          }}
+                        >
+                          Torch Trace
                         </Button>
                       </div>
                     ) : (
