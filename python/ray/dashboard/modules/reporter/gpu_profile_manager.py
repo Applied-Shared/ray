@@ -207,10 +207,16 @@ class GpuProfilingManager:
                 ip_address=self._ip_address
             )
 
-        if not (1 <= num_iterations <= 100):
+        if num_iterations is not None and not (1 <= num_iterations <= 100):
             return False, (
                 f"Invalid num_iterations={num_iterations}. "
                 "Must be between 1 and 100."
+            )
+
+        if duration_ms is not None and not (1 <= duration_ms <= 300_000):
+            return False, (
+                f"Invalid duration_ms={duration_ms}. "
+                "Must be between 1 and 300000 (5 minutes)."
             )
 
         if not self._dynolog_daemon_process:
