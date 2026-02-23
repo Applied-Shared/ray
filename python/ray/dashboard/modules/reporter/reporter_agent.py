@@ -518,11 +518,9 @@ class ReporterAgent(
 
     async def GpuProfiling(self, request, context):
         pid = request.pid
-        # Extract optional fields - use None if not set
-        num_iterations = request.num_iterations if request.HasField("num_iterations") else None
-        duration_ms = request.duration_ms if request.HasField("duration_ms") else None
+        num_iterations = request.num_iterations
         success, output = await self._gpu_profiling_manager.gpu_profile(
-            pid=pid, num_iterations=num_iterations, duration_ms=duration_ms
+            pid=pid, num_iterations=num_iterations
         )
         return reporter_pb2.GpuProfilingReply(success=success, output=output)
 

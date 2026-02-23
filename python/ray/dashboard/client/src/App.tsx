@@ -118,6 +118,11 @@ export type GlobalContextType = {
    * The globally selected current time zone.
    */
   currentTimeZone: string | undefined;
+  /**
+   * Whether the data for this workload is complete or not.
+   * For live clusters, this is always true.
+   */
+  dataComplete: boolean;
 };
 export const GlobalContext = React.createContext<GlobalContextType>({
   nodeMap: {},
@@ -133,6 +138,7 @@ export const GlobalContext = React.createContext<GlobalContextType>({
   dashboardDatasource: undefined,
   serverTimeZone: undefined,
   currentTimeZone: undefined,
+  dataComplete: true,
 });
 
 const App = () => {
@@ -152,6 +158,7 @@ const App = () => {
     sessionName: undefined,
     dashboardDatasource: undefined,
     serverTimeZone: undefined,
+    dataComplete: true,
   });
 
   // Authentication state
@@ -306,6 +313,25 @@ const App = () => {
       );
     }
   };
+
+  useEffect(() => {
+    const checkDataCompleteness = async () => {
+      try {
+        // For history server: ../status goes from /lilypad/history/{uuid}/dashboard/ to /lilypad/history/{uuid}/status
+        // For live cluster, this endpoint won't exist, will throw and default to complete
+        const response = await fetch("../status");
+        const data = await response.json();
+
+        setContext((existingContext) => ({
+          ...existingContext,
+          dataComplete: data.data_complete !== false,
+        }));
+      } catch (error) {
+        console.debug("Data completeness check failed, assuming complete:", error);
+      }
+    };
+    checkDataCompleteness();
+  }, []);
 
   return (
     <StyledEngineProvider injectFirst>
