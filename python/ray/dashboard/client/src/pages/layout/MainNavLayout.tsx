@@ -4,11 +4,13 @@ import { RiBookMarkLine, RiFeedbackLine } from "react-icons/ri/";
 import { Outlet, Link as RouterLink } from "react-router-dom";
 import { GlobalContext } from "../../App";
 import { SearchTimezone } from "../../components/SearchComponent";
+import { IncompleteDataBanner } from "../../components/IncompleteDataBanner";
 import Logo from "../../logo.svg";
 import { MainNavContext, useMainNavState } from "./mainNavContext";
 
 export const MAIN_NAV_HEIGHT = 56;
 export const BREADCRUMBS_HEIGHT = 36;
+export const BANNER_HEIGHT = 72;
 
 /**
  * This is the main navigation stack of the entire application.
@@ -27,6 +29,7 @@ export const BREADCRUMBS_HEIGHT = 36;
  */
 export const MainNavLayout = () => {
   const mainNavContextState = useMainNavState();
+  const { dataComplete } = useContext(GlobalContext);
 
   return (
     <MainNavContext.Provider value={mainNavContextState}>
@@ -42,6 +45,7 @@ export const MainNavLayout = () => {
         <MainNavBar />
         <MainNavBreadcrumbs />
       </Box>
+      {!dataComplete && <IncompleteDataBanner />}
       <Main />
     </MainNavContext.Provider>
   );
@@ -49,16 +53,24 @@ export const MainNavLayout = () => {
 
 const Main = () => {
   const { mainNavPageHierarchy } = useContext(MainNavContext);
+  const { dataComplete } = useContext(GlobalContext);
 
   const tallNav = mainNavPageHierarchy.length > 1;
+  const showBanner = !dataComplete;
+
+  let paddingTop = MAIN_NAV_HEIGHT;
+  if (tallNav) {
+    paddingTop += BREADCRUMBS_HEIGHT + 2; // +2 for border
+  }
+  if (showBanner) {
+    paddingTop += BANNER_HEIGHT;
+  }
 
   return (
     <Box
       component="main"
       sx={{
-        paddingTop: tallNav
-          ? `${MAIN_NAV_HEIGHT + BREADCRUMBS_HEIGHT + 2}px` //When breadcrumbs are also shown, +2 for border
-          : `${MAIN_NAV_HEIGHT}px`,
+        paddingTop: `${paddingTop}px`,
       }}
     >
       <Outlet />
