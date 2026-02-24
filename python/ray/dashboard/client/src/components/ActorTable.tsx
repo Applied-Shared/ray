@@ -18,8 +18,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { orange } from "@mui/material/colors";
 import Pagination from "@mui/material/Pagination";
 import _ from "lodash";
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { GlobalContext } from "../App";
 import { CodeDialogButtonWithPreview } from "../common/CodeDialogButton";
 import { DurationText, getDurationVal } from "../common/DurationText";
 import { ActorLink, generateNodeLink } from "../common/links";
@@ -93,6 +94,8 @@ const ActorTable = ({
   });
   const [actorIdFilterValue, setActorIdFilterValue] = useState(filterToActorId);
   const [pageSize, setPageSize] = useState<number | undefined>(10);
+  
+  const { isHistoricalDashboard } = useContext(GlobalContext);
 
   const uptimeSorterKey = "fake_uptime_attr";
   const gpuUtilizationSorterKey = "fake_gpu_attr";
@@ -652,23 +655,27 @@ const ActorTable = ({
                       >
                         Log
                       </ActorLink>
-                      <br />
-                      <CpuProfilingLink
-                        pid={pid}
-                        nodeId={address?.nodeId}
-                        type=""
-                      />
-                      <br />
-                      <CpuStackTraceLink
-                        pid={pid}
-                        nodeId={address?.nodeId}
-                        type=""
-                      />
-                      <br />
-                      <MemoryProfilingButton
-                        pid={pid}
-                        nodeId={address?.nodeId}
-                      />
+                      {!isHistoricalDashboard && (
+                        <>
+                          <br />
+                          <CpuProfilingLink
+                            pid={pid}
+                            nodeId={address?.nodeId}
+                            type=""
+                          />
+                          <br />
+                          <CpuStackTraceLink
+                            pid={pid}
+                            nodeId={address?.nodeId}
+                            type=""
+                          />
+                          <br />
+                          <MemoryProfilingButton
+                            pid={pid}
+                            nodeId={address?.nodeId}
+                          />
+                        </>
+                      )}
                     </React.Fragment>
                   </TableCell>
                   <TableCell align="center">
