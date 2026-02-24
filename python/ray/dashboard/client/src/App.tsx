@@ -123,6 +123,11 @@ export type GlobalContextType = {
    * For live clusters, this is always true.
    */
   dataComplete: boolean;
+  /**
+   * Whether we're viewing a historical dashboard (history server)
+   * vs a live cluster dashboard.
+   */
+  isHistoricalDashboard: boolean;
 };
 export const GlobalContext = React.createContext<GlobalContextType>({
   nodeMap: {},
@@ -139,6 +144,7 @@ export const GlobalContext = React.createContext<GlobalContextType>({
   serverTimeZone: undefined,
   currentTimeZone: undefined,
   dataComplete: true,
+  isHistoricalDashboard: false,
 });
 
 const App = () => {
@@ -159,6 +165,7 @@ const App = () => {
     dashboardDatasource: undefined,
     serverTimeZone: undefined,
     dataComplete: true,
+    isHistoricalDashboard: false,
   });
 
   // Authentication state
@@ -316,18 +323,35 @@ const App = () => {
 
   useEffect(() => {
     const checkDataCompleteness = async () => {
+      const isHistorical = window.location.pathname.includes('/lilypad/history/');
+      
+      if (!isHistorical) {
+        // Live cluster- data is always complete
+        setContext((existingContext) => ({
+          ...existingContext,
+          isHistoricalDashboard: false,
+          dataComplete: true,
+        }));
+        return;
+      }
+      
       try {
         // For history server: ../status goes from /lilypad/history/{uuid}/dashboard/ to /lilypad/history/{uuid}/status
-        // For live cluster, this endpoint won't exist, will throw and default to complete
         const response = await fetch("../status");
         const data = await response.json();
 
         setContext((existingContext) => ({
           ...existingContext,
+          isHistoricalDashboard: true,
           dataComplete: data.data_complete !== false,
         }));
       } catch (error) {
         console.debug("Data completeness check failed, assuming complete:", error);
+        setContext((existingContext) => ({
+          ...existingContext,
+          isHistoricalDashboard: true,
+          dataComplete: true,
+        }));
       }
     };
     checkDataCompleteness();
