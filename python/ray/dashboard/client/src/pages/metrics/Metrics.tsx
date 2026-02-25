@@ -17,7 +17,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { GlobalContext } from "../../App";
 import { ClassNameProps } from "../../common/props";
 import { MainNavPageInfo } from "../layout/mainNavContext";
-import { MAIN_NAV_HEIGHT } from "../layout/MainNavLayout";
+import { MAIN_NAV_HEIGHT } from "../layout/layoutConstants";
 
 export enum RefreshOptions {
   OFF = "off",

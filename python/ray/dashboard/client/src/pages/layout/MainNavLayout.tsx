@@ -6,11 +6,12 @@ import { GlobalContext } from "../../App";
 import { SearchTimezone } from "../../components/SearchComponent";
 import { IncompleteDataBanner } from "../../components/IncompleteDataBanner";
 import Logo from "../../logo.svg";
+import {
+  BANNER_HEIGHT,
+  BREADCRUMBS_HEIGHT,
+  MAIN_NAV_HEIGHT,
+} from "./layoutConstants";
 import { MainNavContext, useMainNavState } from "./mainNavContext";
-
-export const MAIN_NAV_HEIGHT = 56;
-export const BREADCRUMBS_HEIGHT = 36;
-export const BANNER_HEIGHT = 72;
 
 /**
  * This is the main navigation stack of the entire application.
