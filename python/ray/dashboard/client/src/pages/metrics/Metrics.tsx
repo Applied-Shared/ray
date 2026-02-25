@@ -22,8 +22,8 @@ import { GlobalContext } from "../../App";
 import { CollapsibleSection } from "../../common/CollapsibleSection";
 import { ClassNameProps } from "../../common/props";
 import { HelpInfo } from "../../components/Tooltip";
+import { MAIN_NAV_HEIGHT } from "../layout/layoutConstants";
 import { MainNavPageInfo } from "../layout/mainNavContext";
-import { MAIN_NAV_HEIGHT } from "../layout/MainNavLayout";
 
 export enum RefreshOptions {
   OFF = "off",

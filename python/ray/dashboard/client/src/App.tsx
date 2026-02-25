@@ -257,11 +257,11 @@ const App = () => {
           dataComplete: data.data_complete !== false,
         }));
       } catch (error) {
-        console.debug("Data completeness check failed, assuming complete:", error);
+        console.warn("Data completeness check failed, assuming incomplete:", error);
         setContext((existingContext) => ({
           ...existingContext,
           isHistoricalDashboard: true,
-          dataComplete: true,
+          dataComplete: false,
         }));
       }
     };

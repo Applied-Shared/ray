@@ -1,9 +1,10 @@
 import { Alert, AlertTitle, Box } from "@mui/material";
 import React, { useContext } from "react";
+import {
+  BREADCRUMBS_HEIGHT,
+  MAIN_NAV_HEIGHT,
+} from "../pages/layout/layoutConstants";
 import { MainNavContext } from "../pages/layout/mainNavContext";
-
-const MAIN_NAV_HEIGHT = 56;
-const BREADCRUMBS_HEIGHT = 36;
 
 export const IncompleteDataBanner = () => {
   const { mainNavPageHierarchy } = useContext(MainNavContext);
@@ -24,7 +25,7 @@ export const IncompleteDataBanner = () => {
         zIndex: 999,
       }}
     >
-      <Alert severity="warning" sx={{ borderRadius: 0 }}>
+      <Alert severity="warning" sx={{ borderRadius: 0, minHeight: 72 }}>
         <AlertTitle>Incomplete Data</AlertTitle>
         The data for this workload may be incomplete. This can happen if the cluster terminated abnormally or if data collection errored during execution.
       </Alert>
