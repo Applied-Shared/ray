@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../../App";
 import { useParams } from "react-router-dom";
 import {
   CodeDialogButton,
@@ -64,6 +65,7 @@ const TaskPageContents = ({
   task,
   isLoading,
 }: TaskPageContentsProps) => {
+  const { isHistoricalDashboard } = useContext(GlobalContext);
   if (isLoading) {
     return <Loading loading />;
   }
@@ -233,7 +235,7 @@ const TaskPageContents = ({
               }
             ),
           },
-          isTaskActive
+          isTaskActive && !isHistoricalDashboard
             ? {
                 label: "Actions",
                 content: (

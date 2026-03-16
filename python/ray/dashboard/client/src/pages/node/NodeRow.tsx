@@ -7,7 +7,8 @@ import {
   Tooltip,
 } from "@mui/material";
 import { sortBy } from "lodash";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { GlobalContext } from "../../App";
 import { RiArrowDownSLine, RiArrowRightSLine } from "react-icons/ri";
 import { Link as RouterLink } from "react-router-dom";
 import useSWR from "swr";
@@ -50,6 +51,7 @@ export const NodeRow = ({
   expanded,
   onExpandButtonClick,
 }: NodeRowProps) => {
+  const { isHistoricalDashboard } = useContext(GlobalContext);
   const {
     hostname = "",
     ip = "",
@@ -276,12 +278,16 @@ export const WorkerRow = ({ node, worker }: WorkerRowProps) => {
         <Link component={RouterLink} to={workerLogUrl} target="_blank">
           Log
         </Link>
-        <br />
-        <CpuProfilingLink pid={pid} nodeId={nodeId} type="" />
-        <br />
-        <CpuStackTraceLink pid={pid} nodeId={nodeId} type="" />
-        <br />
-        <MemoryProfilingButton pid={pid} nodeId={nodeId} />
+        {!isHistoricalDashboard && (
+          <>
+            <br />
+            <CpuProfilingLink pid={pid} nodeId={nodeId} type="" />
+            <br />
+            <CpuStackTraceLink pid={pid} nodeId={nodeId} type="" />
+            <br />
+            <MemoryProfilingButton pid={pid} nodeId={nodeId} />
+          </>
+        )}
         {node.gpuProfilingEnabled &&
           worker.language === "PYTHON" &&
           coreWorker?.ipAddress &&

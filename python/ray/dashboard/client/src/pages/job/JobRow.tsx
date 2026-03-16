@@ -1,5 +1,6 @@
 import { Box, Link, TableCell, TableRow, Tooltip } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../../App";
 import { Link as RouterLink } from "react-router-dom";
 import { CodeDialogButtonWithPreview } from "../../common/CodeDialogButton";
 import { DurationText } from "../../common/DurationText";
@@ -19,6 +20,7 @@ type JobRowProps = {
 };
 
 export const JobRow = ({ job }: JobRowProps) => {
+  const { isHistoricalDashboard } = useContext(GlobalContext);
   const {
     job_id,
     submission_id,
@@ -114,23 +116,27 @@ export const JobRow = ({ job }: JobRowProps) => {
             <br />
           </React.Fragment>
         )}
-        <CpuStackTraceLink
-          pid={job.driver_info?.pid}
-          nodeId={job.driver_node_id}
-          type="Driver"
-        />
-        <br />
-        <CpuProfilingLink
-          pid={job.driver_info?.pid}
-          nodeId={job.driver_node_id}
-          type="Driver"
-        />
-        <br />
-        <MemoryProfilingButton
-          pid={job.driver_info?.pid}
-          nodeId={job.driver_node_id}
-          type="Driver"
-        />
+        {!isHistoricalDashboard && (
+          <>
+            <CpuStackTraceLink
+              pid={job.driver_info?.pid}
+              nodeId={job.driver_node_id}
+              type="Driver"
+            />
+            <br />
+            <CpuProfilingLink
+              pid={job.driver_info?.pid}
+              nodeId={job.driver_node_id}
+              type="Driver"
+            />
+            <br />
+            <MemoryProfilingButton
+              pid={job.driver_info?.pid}
+              nodeId={job.driver_node_id}
+              type="Driver"
+            />
+          </>
+        )}
       </TableCell>
       <TableCell align="center">
         {start_time ? formatDateFromTimeMs(start_time) : "-"}
