@@ -89,6 +89,8 @@ export const Metrics = () => {
     dashboardDatasource,
     sessionName,
     currentTimeZone,
+    grafanaDefaultFrom,
+    grafanaDefaultTo,
   } = useContext(GlobalContext);
 
   const grafanaDefaultDashboardUid =
@@ -121,8 +123,8 @@ export const Metrics = () => {
         }
 
         params.set("refresh", "5s");
-        params.set("from", "now-5m");
-        params.set("to", "now");
+        params.set("from", grafanaDefaultFrom ?? "now-5m");
+        params.set("to", grafanaDefaultTo ?? "now");
 
         if (currentTimeZone !== undefined) {
           params.set("timezone", currentTimeZone);
@@ -149,6 +151,8 @@ export const Metrics = () => {
       grafanaDefaultDatasource,
       grafanaClusterFilter,
       grafanaHost,
+      grafanaDefaultFrom,
+      grafanaDefaultTo,
     ],
   );
 
