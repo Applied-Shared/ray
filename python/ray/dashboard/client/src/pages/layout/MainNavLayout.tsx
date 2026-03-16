@@ -7,7 +7,6 @@ import { SearchTimezone } from "../../components/SearchComponent";
 import { IncompleteDataBanner } from "../../components/IncompleteDataBanner";
 import Logo from "../../logo.svg";
 import {
-  BANNER_HEIGHT,
   BREADCRUMBS_HEIGHT,
   MAIN_NAV_HEIGHT,
 } from "./layoutConstants";
@@ -54,18 +53,12 @@ export const MainNavLayout = () => {
 
 const Main = () => {
   const { mainNavPageHierarchy } = useContext(MainNavContext);
-  const { dataComplete } = useContext(GlobalContext);
 
   const tallNav = mainNavPageHierarchy.length > 1;
-  const showBanner = !dataComplete;
 
-  let paddingTop = MAIN_NAV_HEIGHT;
-  if (tallNav) {
-    paddingTop += BREADCRUMBS_HEIGHT + 2; // +2 for border
-  }
-  if (showBanner) {
-    paddingTop += BANNER_HEIGHT;
-  }
+  const paddingTop = tallNav
+    ? MAIN_NAV_HEIGHT + BREADCRUMBS_HEIGHT + 2 // +2 for border
+    : MAIN_NAV_HEIGHT;
 
   return (
     <Box

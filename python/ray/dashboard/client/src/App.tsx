@@ -113,6 +113,15 @@ export type GlobalContextType = {
    */
   currentTimeZone: string | undefined;
   /**
+   * Default start of the Grafana time range. When set, overrides the
+   * default "now-5m" value.
+   */
+  grafanaDefaultFrom: string | undefined;
+  /**
+   * Default end of the Grafana time range.
+   */
+  grafanaDefaultTo: string | undefined;
+  /**
    * Whether the data for this workload is complete or not.
    * For live clusters, this is always true.
    */
@@ -135,6 +144,8 @@ export const GlobalContext = React.createContext<GlobalContextType>({
   prometheusHealth: undefined,
   sessionName: undefined,
   dashboardDatasource: undefined,
+  grafanaDefaultFrom: undefined,
+  grafanaDefaultTo: undefined,
   serverTimeZone: undefined,
   currentTimeZone: undefined,
   dataComplete: true,
@@ -157,6 +168,8 @@ const App = () => {
     prometheusHealth: undefined,
     sessionName: undefined,
     dashboardDatasource: undefined,
+    grafanaDefaultFrom: undefined,
+    grafanaDefaultTo: undefined,
     serverTimeZone: undefined,
     dataComplete: true,
     isHistoricalDashboard: false,
@@ -191,6 +204,8 @@ const App = () => {
         prometheusHealth,
         dashboardUids,
         dashboardDatasource,
+        grafanaDefaultFrom,
+        grafanaDefaultTo,
       } = await getMetricsInfo();
       setContext((existingContext) => ({
         ...existingContext,
@@ -202,6 +217,8 @@ const App = () => {
         sessionName,
         prometheusHealth,
         dashboardDatasource,
+        grafanaDefaultFrom,
+        grafanaDefaultTo,
       }));
     };
     doEffect();
@@ -249,8 +266,11 @@ const App = () => {
       try {
         // For history server: ../status goes from /lilypad/history/{uuid}/dashboard/ to /lilypad/history/{uuid}/status
         const response = await fetch("../status");
+        if (!response.ok) {
+          throw new Error(`Status endpoint returned ${response.status}`);
+        }
         const data = await response.json();
-        
+
         setContext((existingContext) => ({
           ...existingContext,
           isHistoricalDashboard: true,
