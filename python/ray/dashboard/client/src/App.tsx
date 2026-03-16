@@ -128,6 +128,15 @@ export type GlobalContextType = {
    * vs a live cluster dashboard.
    */
   isHistoricalDashboard: boolean;
+  /**
+   * Default start of the Grafana time range. When set, overrides the
+   * default "now-5m" value.
+   */
+  grafanaDefaultFrom: string | undefined;
+  /**
+   * Default end of the Grafana time range.
+   */
+  grafanaDefaultTo: string | undefined;
 };
 export const GlobalContext = React.createContext<GlobalContextType>({
   nodeMap: {},
@@ -141,6 +150,8 @@ export const GlobalContext = React.createContext<GlobalContextType>({
   prometheusHealth: undefined,
   sessionName: undefined,
   dashboardDatasource: undefined,
+  grafanaDefaultFrom: undefined,
+  grafanaDefaultTo: undefined,
   serverTimeZone: undefined,
   currentTimeZone: undefined,
   dataComplete: true,
@@ -163,6 +174,8 @@ const App = () => {
     prometheusHealth: undefined,
     sessionName: undefined,
     dashboardDatasource: undefined,
+    grafanaDefaultFrom: undefined,
+    grafanaDefaultTo: undefined,
     serverTimeZone: undefined,
     dataComplete: true,
     isHistoricalDashboard: false,
@@ -205,6 +218,8 @@ const App = () => {
         prometheusHealth,
         dashboardUids,
         dashboardDatasource,
+        grafanaDefaultFrom,
+        grafanaDefaultTo,
       } = await getMetricsInfo();
       setContext((existingContext) => ({
         ...existingContext,
@@ -216,6 +231,8 @@ const App = () => {
         sessionName,
         prometheusHealth,
         dashboardDatasource,
+        grafanaDefaultFrom,
+        grafanaDefaultTo,
       }));
     };
     doEffect();

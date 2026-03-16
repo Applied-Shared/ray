@@ -24,6 +24,8 @@ const Wrapper = ({ children }: PropsWithChildren<{}>) => {
         nodeMapByIp: {},
         namespaceMap: {},
         dashboardDatasource: "Prometheus",
+        grafanaDefaultFrom: undefined,
+        grafanaDefaultTo: undefined,
         serverTimeZone: undefined,
         currentTimeZone: undefined,
       }}
@@ -53,6 +55,8 @@ const MetricsDisabledWrapper = ({ children }: PropsWithChildren<{}>) => {
         nodeMapByIp: {},
         namespaceMap: {},
         dashboardDatasource: "Prometheus",
+        grafanaDefaultFrom: undefined,
+        grafanaDefaultTo: undefined,
         serverTimeZone: undefined,
         currentTimeZone: undefined,
       }}
