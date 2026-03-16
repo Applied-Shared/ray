@@ -353,8 +353,16 @@ const App = () => {
       }
       
       try {
-        // For history server: ../status goes from /lilypad/history/{uuid}/dashboard/ to /lilypad/history/{uuid}/status
-        const response = await fetch("../status");
+        // Construct absolute path to status endpoint: /lilypad/history/{uuid}/status
+        const pathMatch = window.location.pathname.match(/\/lilypad\/history\/[^/]+/);
+        if (!pathMatch) {
+          throw new Error("Could not parse history UUID from pathname");
+        }
+        const statusUrl = `${pathMatch[0]}/status`;
+        const response = await fetch(statusUrl);
+        if (!response.ok) {
+          throw new Error(`Status endpoint returned ${response.status}`);
+        }
         const data = await response.json();
 
         setContext((existingContext) => ({
