@@ -16,7 +16,6 @@ import { RiExternalLinkLine } from "react-icons/ri";
 import { useLocalStorage } from "usehooks-ts";
 import { GlobalContext } from "../../App";
 import { ClassNameProps } from "../../common/props";
-import { HelpInfo } from "../../components/Tooltip";
 import { MAIN_NAV_HEIGHT } from "../layout/layoutConstants";
 import { MainNavPageInfo } from "../layout/mainNavContext";
 

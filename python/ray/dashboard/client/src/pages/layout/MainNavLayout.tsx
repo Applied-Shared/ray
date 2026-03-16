@@ -51,8 +51,11 @@ export const MainNavLayout = () => {
   );
 };
 
+const BANNER_PADDING_BOTTOM = 80;
+
 const Main = () => {
   const { mainNavPageHierarchy } = useContext(MainNavContext);
+  const { dataComplete } = useContext(GlobalContext);
 
   const tallNav = mainNavPageHierarchy.length > 1;
 
@@ -65,6 +68,7 @@ const Main = () => {
       component="main"
       sx={{
         paddingTop: `${paddingTop}px`,
+        paddingBottom: !dataComplete ? `${BANNER_PADDING_BOTTOM}px` : undefined,
       }}
     >
       <Outlet />
