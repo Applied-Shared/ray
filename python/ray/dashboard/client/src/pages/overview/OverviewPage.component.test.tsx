@@ -100,6 +100,8 @@ const Wrapper =
               grafanaDefaultTo: undefined,
               serverTimeZone: undefined,
               currentTimeZone: undefined,
+              dataComplete: true,
+              isHistoricalDashboard: false,
             }}
           >
             {children}

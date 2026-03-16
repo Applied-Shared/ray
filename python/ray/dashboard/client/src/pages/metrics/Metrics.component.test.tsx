@@ -28,6 +28,8 @@ const Wrapper = ({ children }: PropsWithChildren<{}>) => {
         grafanaDefaultTo: undefined,
         serverTimeZone: undefined,
         currentTimeZone: undefined,
+        dataComplete: true,
+        isHistoricalDashboard: false,
       }}
     >
       <STYLE_WRAPPER>{children}</STYLE_WRAPPER>
@@ -59,6 +61,8 @@ const MetricsDisabledWrapper = ({ children }: PropsWithChildren<{}>) => {
         grafanaDefaultTo: undefined,
         serverTimeZone: undefined,
         currentTimeZone: undefined,
+        dataComplete: true,
+        isHistoricalDashboard: false,
       }}
     >
       <STYLE_WRAPPER>{children}</STYLE_WRAPPER>
