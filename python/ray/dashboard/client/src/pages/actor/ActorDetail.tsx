@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../../App";
 import { Outlet } from "react-router-dom";
 import {
   CodeDialogButton,
@@ -52,6 +53,7 @@ export const ActorDetailLayout = () => {
 
 const ActorDetailPage = () => {
   const { params, actorDetail, msg, isLoading } = useActorDetail();
+  const { isHistoricalDashboard } = useContext(GlobalContext);
 
   if (isLoading || actorDetail === undefined) {
     return (
@@ -185,30 +187,34 @@ const ActorDetailPage = () => {
                 }
               : { value: "-" },
           },
-          {
-            label: "Actions",
-            content: (
-              <div>
-                <CpuStackTraceLink
-                  pid={actorDetail.pid}
-                  nodeId={actorDetail.address?.nodeId}
-                  type=""
-                />
-                <br />
-                <CpuProfilingLink
-                  pid={actorDetail.pid}
-                  nodeId={actorDetail.address?.nodeId}
-                  type=""
-                />
-                <br />
-                <MemoryProfilingButton
-                  pid={actorDetail.pid}
-                  nodeId={actorDetail.address?.nodeId}
-                  type=""
-                />
-              </div>
-            ),
-          },
+          ...(!isHistoricalDashboard
+            ? [
+                {
+                  label: "Actions",
+                  content: (
+                    <div>
+                      <CpuStackTraceLink
+                        pid={actorDetail.pid}
+                        nodeId={actorDetail.address?.nodeId}
+                        type=""
+                      />
+                      <br />
+                      <CpuProfilingLink
+                        pid={actorDetail.pid}
+                        nodeId={actorDetail.address?.nodeId}
+                        type=""
+                      />
+                      <br />
+                      <MemoryProfilingButton
+                        pid={actorDetail.pid}
+                        nodeId={actorDetail.address?.nodeId}
+                        type=""
+                      />
+                    </div>
+                  ),
+                },
+              ]
+            : []),
           {
             label: "Call site",
             content: (

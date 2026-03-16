@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../../App";
 import {
   CodeDialogButton,
   CodeDialogButtonWithPreview,
@@ -26,6 +27,7 @@ export const JobDetailInfoPage = () => {
   // TODO(aguo): Add more content to this page!
 
   const { job, msg, isLoading, params } = useJobDetail();
+  const { isHistoricalDashboard } = useContext(GlobalContext);
 
   if (!job) {
     return (
@@ -166,30 +168,34 @@ export const JobMetadataSection = ({ job }: JobMetadataSectionProps) => {
               },
             ]
           : []),
-        {
-          label: "Actions",
-          content: (
-            <div>
-              <CpuStackTraceLink
-                pid={job.driver_info?.pid}
-                nodeId={job.driver_node_id}
-                type="Driver"
-              />
-              <br />
-              <CpuProfilingLink
-                pid={job.driver_info?.pid}
-                nodeId={job.driver_node_id}
-                type="Driver"
-              />
-              <br />
-              <MemoryProfilingButton
-                pid={job.driver_info?.pid}
-                nodeId={job.driver_node_id}
-                type="Driver"
-              />
-            </div>
-          ),
-        },
+        ...(!isHistoricalDashboard
+          ? [
+              {
+                label: "Actions",
+                content: (
+                  <div>
+                    <CpuStackTraceLink
+                      pid={job.driver_info?.pid}
+                      nodeId={job.driver_node_id}
+                      type="Driver"
+                    />
+                    <br />
+                    <CpuProfilingLink
+                      pid={job.driver_info?.pid}
+                      nodeId={job.driver_node_id}
+                      type="Driver"
+                    />
+                    <br />
+                    <MemoryProfilingButton
+                      pid={job.driver_info?.pid}
+                      nodeId={job.driver_node_id}
+                      type="Driver"
+                    />
+                  </div>
+                ),
+              },
+            ]
+          : []),
       ]}
     />
   );

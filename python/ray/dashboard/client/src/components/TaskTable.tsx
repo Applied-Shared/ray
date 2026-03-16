@@ -14,7 +14,8 @@ import {
 } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Pagination from "@mui/material/Pagination";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { GlobalContext } from "../App";
 import { Link as RouterLink } from "react-router-dom";
 import { CodeDialogButton } from "../common/CodeDialogButton";
 import { DurationText } from "../common/DurationText";
@@ -341,6 +342,7 @@ type TaskTableActionsProps = {
 };
 
 const TaskTableActions = ({ task }: TaskTableActionsProps) => {
+  const { isHistoricalDashboard } = useContext(GlobalContext);
   const errorDetails =
     task.error_type !== null && task.error_message !== null
       ? `Error Type: ${task.error_type}\n\n${task.error_message}`
@@ -353,7 +355,7 @@ const TaskTableActions = ({ task }: TaskTableActionsProps) => {
       <Link component={RouterLink} to={`tasks/${task.task_id}`}>
         Log
       </Link>
-      {isTaskActive && (
+      {isTaskActive && !isHistoricalDashboard && (
         <React.Fragment>
           <br />
           <TaskCpuProfilingLink

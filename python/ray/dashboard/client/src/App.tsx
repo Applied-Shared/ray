@@ -121,6 +121,16 @@ export type GlobalContextType = {
    * Default end of the Grafana time range.
    */
   grafanaDefaultTo: string | undefined;
+  /**
+   * Whether the data for this workload is complete or not.
+   * For live clusters, this is always true.
+   */
+  dataComplete: boolean;
+  /**
+   * Whether we're viewing a historical dashboard (history server)
+   * vs a live cluster dashboard.
+   */
+  isHistoricalDashboard: boolean;
 };
 export const GlobalContext = React.createContext<GlobalContextType>({
   nodeMap: {},
@@ -138,6 +148,8 @@ export const GlobalContext = React.createContext<GlobalContextType>({
   grafanaDefaultTo: undefined,
   serverTimeZone: undefined,
   currentTimeZone: undefined,
+  dataComplete: true,
+  isHistoricalDashboard: false,
 });
 
 const App = () => {
@@ -159,6 +171,8 @@ const App = () => {
     grafanaDefaultFrom: undefined,
     grafanaDefaultTo: undefined,
     serverTimeZone: undefined,
+    dataComplete: true,
+    isHistoricalDashboard: false,
   });
   useEffect(() => {
     getNodeList().then((res) => {
@@ -233,6 +247,50 @@ const App = () => {
       }));
     };
     updateTimezone();
+  }, []);
+
+  useEffect(() => {
+    const checkDataCompleteness = async () => {
+      const isHistorical = window.location.pathname.includes('/lilypad/history/');
+      
+      if (!isHistorical) {
+        // Live cluster- data is always complete
+        setContext((existingContext) => ({
+          ...existingContext,
+          isHistoricalDashboard: false,
+          dataComplete: true,
+        }));
+        return;
+      }
+      
+      try {
+        // Construct absolute path to status endpoint: /lilypad/history/{uuid}/status
+        const pathMatch = window.location.pathname.match(/\/lilypad\/history\/[^/]+/);
+        if (!pathMatch) {
+          throw new Error("Could not parse history UUID from pathname");
+        }
+        const statusUrl = `${pathMatch[0]}/status`;
+        const response = await fetch(statusUrl);
+        if (!response.ok) {
+          throw new Error(`Status endpoint returned ${response.status}`);
+        }
+        const data = await response.json();
+
+        setContext((existingContext) => ({
+          ...existingContext,
+          isHistoricalDashboard: true,
+          dataComplete: data.data_complete !== false,
+        }));
+      } catch (error) {
+        console.warn("Data completeness check failed, assuming incomplete:", error);
+        setContext((existingContext) => ({
+          ...existingContext,
+          isHistoricalDashboard: true,
+          dataComplete: false,
+        }));
+      }
+    };
+    checkDataCompleteness();
   }, []);
 
   return (

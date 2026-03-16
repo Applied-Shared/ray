@@ -16,8 +16,8 @@ import { RiExternalLinkLine } from "react-icons/ri";
 import { useLocalStorage } from "usehooks-ts";
 import { GlobalContext } from "../../App";
 import { ClassNameProps } from "../../common/props";
+import { MAIN_NAV_HEIGHT } from "../layout/layoutConstants";
 import { MainNavPageInfo } from "../layout/mainNavContext";
-import { MAIN_NAV_HEIGHT } from "../layout/MainNavLayout";
 
 export enum RefreshOptions {
   OFF = "off",
