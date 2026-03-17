@@ -69,6 +69,7 @@ type JobMetadataSectionProps = {
 };
 
 export const JobMetadataSection = ({ job }: JobMetadataSectionProps) => {
+  const { isHistoricalDashboard } = useContext(GlobalContext);
   return (
     <MetadataSection
       metadataList={[
