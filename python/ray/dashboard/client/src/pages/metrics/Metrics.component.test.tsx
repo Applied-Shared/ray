@@ -153,6 +153,8 @@ describe("Metrics", () => {
             grafanaDefaultTo: "2025-01-01T01:00:00.000Z",
             serverTimeZone: undefined,
             currentTimeZone: undefined,
+            dataComplete: true,
+            isHistoricalDashboard: false,
           }}
         >
           <STYLE_WRAPPER>{children}</STYLE_WRAPPER>
@@ -199,6 +201,8 @@ describe("Metrics", () => {
             grafanaDefaultTo: undefined,
             serverTimeZone: undefined,
             currentTimeZone: undefined,
+            dataComplete: true,
+            isHistoricalDashboard: false,
           }}
         >
           <STYLE_WRAPPER>{children}</STYLE_WRAPPER>
