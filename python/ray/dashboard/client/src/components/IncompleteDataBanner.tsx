@@ -1,9 +1,9 @@
 import { Alert, AlertTitle, Box } from "@mui/material";
 import React from "react";
 
-interface IncompleteDataBannerProps {
+type IncompleteDataBannerProps = {
   topOffset?: number;
-}
+};
 
 export const IncompleteDataBanner = ({ topOffset = 0 }: IncompleteDataBannerProps) => {
   return (
