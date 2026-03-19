@@ -1,7 +1,11 @@
 import { Alert, AlertTitle, Box } from "@mui/material";
 import React from "react";
 
-export const IncompleteDataBanner = () => {
+interface IncompleteDataBannerProps {
+  topOffset?: number;
+}
+
+export const IncompleteDataBanner = ({ topOffset = 0 }: IncompleteDataBannerProps) => {
   return (
     <Box
       sx={{
@@ -9,7 +13,7 @@ export const IncompleteDataBanner = () => {
         position: "fixed",
         left: 0,
         right: 0,
-        bottom: 0,
+        top: topOffset,
         zIndex: 999,
       }}
     >

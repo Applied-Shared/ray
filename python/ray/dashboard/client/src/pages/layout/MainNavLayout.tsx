@@ -29,7 +29,6 @@ import { MainNavContext, useMainNavState } from "./mainNavContext";
  */
 export const MainNavLayout = () => {
   const mainNavContextState = useMainNavState();
-  const { dataComplete } = useContext(GlobalContext);
 
   return (
     <MainNavContext.Provider value={mainNavContextState}>
@@ -45,13 +44,12 @@ export const MainNavLayout = () => {
         <MainNavBar />
         <MainNavBreadcrumbs />
       </Box>
-      {!dataComplete && <IncompleteDataBanner />}
       <Main />
     </MainNavContext.Provider>
   );
 };
 
-const BANNER_PADDING_BOTTOM = 80;
+const BANNER_HEIGHT = 80;
 
 const Main = () => {
   const { mainNavPageHierarchy } = useContext(MainNavContext);
@@ -59,7 +57,7 @@ const Main = () => {
 
   const tallNav = mainNavPageHierarchy.length > 1;
 
-  const paddingTop = tallNav
+  const navHeight = tallNav
     ? MAIN_NAV_HEIGHT + BREADCRUMBS_HEIGHT + 2 // +2 for border
     : MAIN_NAV_HEIGHT;
 
@@ -67,10 +65,10 @@ const Main = () => {
     <Box
       component="main"
       sx={{
-        paddingTop: `${paddingTop}px`,
-        paddingBottom: !dataComplete ? `${BANNER_PADDING_BOTTOM}px` : undefined,
+        paddingTop: `${navHeight + (!dataComplete ? BANNER_HEIGHT : 0)}px`,
       }}
     >
+      {!dataComplete && <IncompleteDataBanner topOffset={navHeight} />}
       <Outlet />
     </Box>
   );
@@ -87,12 +85,7 @@ const NAV_ITEMS = [
     path: "/jobs",
     id: "jobs",
   },
-  {
-    title: "Serve",
-    path: "/serve",
-    id: "serve",
-  },
-  {
+{
     title: "Cluster",
     path: "/cluster",
     id: "cluster",
