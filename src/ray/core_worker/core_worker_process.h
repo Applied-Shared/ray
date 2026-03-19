@@ -21,7 +21,6 @@
 #include "ray/core_worker/core_worker_options.h"
 #include "ray/core_worker/grpc_service.h"
 #include "ray/core_worker/metrics.h"
-#include "ray/rpc/metrics_agent_client.h"
 #include "ray/util/mutex_protected.h"
 
 namespace ray {
@@ -180,9 +179,6 @@ class CoreWorkerProcessImpl {
 
   /// The proxy service handler that routes the RPC calls to the core worker.
   std::unique_ptr<CoreWorkerServiceHandlerProxy> service_handler_;
-
-  /// The client to export metrics to the metrics agent.
-  std::unique_ptr<ray::rpc::MetricsAgentClient> metrics_agent_client_;
 
   ray::stats::Gauge task_by_state_counter_{GetTaskMetric()};
 };
