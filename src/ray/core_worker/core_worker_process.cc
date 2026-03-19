@@ -827,18 +827,11 @@ CoreWorkerProcessImpl::CoreWorkerProcessImpl(const CoreWorkerOptions &options)
     auto worker = CreateCoreWorker(options_, worker_id_);
     auto write_locked = core_worker_.LockForWrite();
     write_locked.Get() = worker;
-    // Initialize metrics agent client.
-    metrics_agent_client_ = std::make_unique<ray::rpc::MetricsAgentClientImpl>(
-        "127.0.0.1", options_.metrics_agent_port, io_service_, *client_call_manager_);
-    metrics_agent_client_->WaitForServerReady([this](const Status &server_status) {
-      if (server_status.ok()) {
-        stats::InitOpenTelemetryExporter(options_.metrics_agent_port);
-      } else {
-        RAY_LOG(ERROR) << "Failed to establish connection to the metrics exporter agent. "
-                          "Metrics will not be exported. "
-                       << "Exporter agent status: " << server_status.ToString();
-      }
-    });
+    // Initialize OpenTelemetry exporter synchronously to avoid getenv/setenv race.
+    // POSIX setenv is MT-Unsafe; the async WaitForServerReady callback ran on
+    // the io_service thread, racing with user-thread setenv() calls.
+    // See: https://github.com/ray-project/ray/pull/61281
+    stats::InitOpenTelemetryExporter(options_.metrics_agent_port);
   }
 }
 
