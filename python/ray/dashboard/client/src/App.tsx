@@ -40,26 +40,6 @@ import { ClusterDetailInfoPage } from "./pages/node/ClusterDetailInfoPage";
 import { ClusterLayout } from "./pages/node/ClusterLayout";
 import NodeDetailPage from "./pages/node/NodeDetail";
 import { OverviewPage } from "./pages/overview/OverviewPage";
-import {
-  ServeApplicationDetailLayout,
-  ServeApplicationDetailPage,
-} from "./pages/serve/ServeApplicationDetailPage";
-import {
-  ServeDeploymentDetailLayout,
-  ServeDeploymentDetailPage,
-} from "./pages/serve/ServeDeploymentDetailPage";
-import { ServeDeploymentsListPage } from "./pages/serve/ServeDeploymentsListPage";
-import { ServeLayout, ServeSideTabLayout } from "./pages/serve/ServeLayout";
-import { ServeReplicaDetailLayout } from "./pages/serve/ServeReplicaDetailLayout";
-import { ServeReplicaDetailPage } from "./pages/serve/ServeReplicaDetailPage";
-import {
-  ServeControllerDetailPage,
-  ServeProxyDetailPage,
-} from "./pages/serve/ServeSystemActorDetailPage";
-import {
-  ServeSystemDetailLayout,
-  ServeSystemDetailPage,
-} from "./pages/serve/ServeSystemDetailPage";
 import { TaskPage } from "./pages/task/TaskPage";
 import { getNodeList } from "./service/node";
 import { lightTheme } from "./theme";
@@ -473,58 +453,6 @@ const App = () => {
                     </Route>
                   </Route>
                   <Route element={<Metrics />} path="metrics" />
-                  <Route element={<ServeLayout />} path="serve">
-                    <Route element={<ServeSideTabLayout />} path="">
-                      <Route
-                        element={
-                          <SideTabPage tabId="system">
-                            <ServeSystemDetailPage />
-                          </SideTabPage>
-                        }
-                        path="system"
-                      />
-                      <Route
-                        element={
-                          <SideTabPage tabId="deployments">
-                            <ServeDeploymentsListPage />
-                          </SideTabPage>
-                        }
-                        path=""
-                      />
-                    </Route>
-                    <Route element={<ServeSystemDetailLayout />} path="system">
-                      <Route
-                        element={<ServeControllerDetailPage />}
-                        path="controller"
-                      />
-                      <Route
-                        element={<ServeProxyDetailPage />}
-                        path="proxies/:proxyId"
-                      />
-                    </Route>
-                    <Route
-                      element={<ServeApplicationDetailLayout />}
-                      path="applications/:applicationName"
-                    >
-                      <Route element={<ServeApplicationDetailPage />} path="" />
-                      <Route
-                        element={<ServeDeploymentDetailLayout />}
-                        path=":deploymentName"
-                      >
-                        <Route
-                          element={<ServeDeploymentDetailPage />}
-                          path=""
-                        />
-                        <Route
-                          element={<ServeReplicaDetailLayout />}
-                          path=":replicaId"
-                        >
-                          <Route element={<ServeReplicaDetailPage />} path="" />
-                          <Route path="tasks/:taskId" element={<TaskPage />} />
-                        </Route>
-                      </Route>
-                    </Route>
-                  </Route>
                   <Route element={<LogsLayout />} path="logs">
                     <Route element={<StateApiLogsListPage />} path="" />
                     <Route element={<StateApiLogViewerPage />} path="viewer" />
