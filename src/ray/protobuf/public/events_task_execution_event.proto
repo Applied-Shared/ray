@@ -40,4 +40,16 @@ message TaskExecutionEvent {
   bytes worker_id = 6;
   int32 worker_pid = 7;
   bytes job_id = 8;
+
+  // Task log file information for per-task log viewing.
+  message TaskLogInfo {
+    string stdout_file = 1;
+    string stderr_file = 2;
+    int64 stdout_start = 3;
+    int64 stdout_end = 4;
+    int64 stderr_start = 5;
+    int64 stderr_end = 6;
+  }
+
+  TaskLogInfo task_log_info = 9;
 }

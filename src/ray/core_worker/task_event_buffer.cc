@@ -259,6 +259,17 @@ void TaskStatusEvent::PopulateRpcRayTaskExecutionEvent(
   }
 
   execution_event_data.set_job_id(job_id_.Binary());
+
+  if (state_update_->task_log_info_.has_value()) {
+    auto *log_info = execution_event_data.mutable_task_log_info();
+    const auto &src = state_update_->task_log_info_.value();
+    log_info->set_stdout_file(src.stdout_file());
+    log_info->set_stderr_file(src.stderr_file());
+    log_info->set_stdout_start(src.stdout_start());
+    log_info->set_stdout_end(src.stdout_end());
+    log_info->set_stderr_start(src.stderr_start());
+    log_info->set_stderr_end(src.stderr_end());
+  }
 }
 
 void TaskStatusEvent::PopulateRpcRayEventBaseFields(
