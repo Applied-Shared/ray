@@ -51,6 +51,9 @@ GRAFANA_HOST_DISABLED_VALUE = "DISABLED"
 GRAFANA_IFRAME_HOST_ENV_VAR = "RAY_GRAFANA_IFRAME_HOST"
 GRAFANA_DASHBOARD_OUTPUT_DIR_ENV_VAR = "RAY_METRICS_GRAFANA_DASHBOARD_OUTPUT_DIR"
 GRAFANA_HEALTHCHECK_PATH = "api/health"
+GRAFANA_SESSION_NAME_ENV_VAR = "RAY_GRAFANA_SESSION_NAME"
+GRAFANA_DEFAULT_FROM_ENV_VAR = "RAY_GRAFANA_DEFAULT_FROM"
+GRAFANA_DEFAULT_TO_ENV_VAR = "RAY_GRAFANA_DEFAULT_TO"
 
 
 # parse_prom_headers will make sure the input is in one of the following formats:
@@ -160,16 +163,28 @@ class MetricsHead(SubprocessModule):
                         json=json,
                     )
 
-                return dashboard_optional_utils.rest_response(
+                session_name = os.environ.get(
+                    GRAFANA_SESSION_NAME_ENV_VAR, self.session_name
+                )
+                grafana_default_from = os.environ.get(GRAFANA_DEFAULT_FROM_ENV_VAR)
+                grafana_default_to = os.environ.get(GRAFANA_DEFAULT_TO_ENV_VAR)
+
+                response_kwargs = dict(
                     status_code=dashboard_utils.HTTPStatusCode.OK,
                     message="Grafana running",
                     grafana_host=grafana_iframe_host,
                     grafana_org_id=self._grafana_org_id,
-                    session_name=self.session_name,
+                    session_name=session_name,
                     dashboard_uids=self._dashboard_uids,
                     dashboard_datasource=self._prometheus_name,
                     grafana_cluster_filter=self._grafana_cluster_filter,
                 )
+                if grafana_default_from is not None:
+                    response_kwargs["grafana_default_from"] = grafana_default_from
+                if grafana_default_to is not None:
+                    response_kwargs["grafana_default_to"] = grafana_default_to
+
+                return dashboard_optional_utils.rest_response(**response_kwargs)
 
         except Exception as e:
             logger.debug(
