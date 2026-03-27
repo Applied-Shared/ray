@@ -263,12 +263,27 @@ void TaskStatusEvent::PopulateRpcRayTaskLifecycleEvent(
   if (state_update_->task_log_info_.has_value()) {
     auto *log_info = lifecycle_event_data.mutable_task_log_info();
     const auto &src = state_update_->task_log_info_.value();
-    log_info->set_stdout_file(src.stdout_file());
-    log_info->set_stderr_file(src.stderr_file());
-    log_info->set_stdout_start(src.stdout_start());
-    log_info->set_stdout_end(src.stdout_end());
-    log_info->set_stderr_start(src.stderr_start());
-    log_info->set_stderr_end(src.stderr_end());
+    // Merge fields: only overwrite if the source has a non-default value.
+    // This preserves data from prior events (e.g. start event sets file paths
+    // and start offsets, end event sets end offsets).
+    if (!src.stdout_file().empty()) {
+      log_info->set_stdout_file(src.stdout_file());
+    }
+    if (!src.stderr_file().empty()) {
+      log_info->set_stderr_file(src.stderr_file());
+    }
+    if (src.stdout_start() > 0) {
+      log_info->set_stdout_start(src.stdout_start());
+    }
+    if (src.stdout_end() > 0) {
+      log_info->set_stdout_end(src.stdout_end());
+    }
+    if (src.stderr_start() > 0) {
+      log_info->set_stderr_start(src.stderr_start());
+    }
+    if (src.stderr_end() > 0) {
+      log_info->set_stderr_end(src.stderr_end());
+    }
   }
 }
 
