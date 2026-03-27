@@ -138,9 +138,17 @@ class RayTrainWorker:
             logger.error(f"Error deserializing the training function: {e}")
             raise
 
+        worker = ray._private.worker.global_worker
+        task_id = ray.get_runtime_context().get_task_id()
+        attempt_number = ray.get_runtime_context().get_task_attempt_number()
+
         def train_fn_with_final_checkpoint_flush():
-            train_fn()
-            get_train_context().checkpoint_upload_threadpool.shutdown()
+            worker.record_task_log_start(task_id, attempt_number)
+            try:
+                train_fn()
+                get_train_context().checkpoint_upload_threadpool.shutdown()
+            finally:
+                worker.record_task_log_end(task_id, attempt_number)
 
         # Create and start the training thread.
         get_train_context().execution_context.training_thread_runner.run(
