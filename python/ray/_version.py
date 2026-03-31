@@ -1,6 +1,6 @@
 # Replaced with the current commit when building the wheels.
-commit = "{{RAY_COMMIT_SHA}}"
-version = "2.50.1.6"
+commit = "v2.50.1.7"
+version = "2.50.1.7"
 
 if __name__ == "__main__":
     print("%s %s" % (version, commit))
