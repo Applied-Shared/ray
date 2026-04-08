@@ -3133,12 +3133,11 @@ std::unique_ptr<AgentManager> NodeManager::CreateDashboardAgentManager(
   }
 
   std::string agent_name = "dashboard_agent";
-  // TODO(ryw): after thorough testing, we can disable the fate_shares flag and let a
-  // dashboard agent crash no longer lead to a raylet crash.
-  auto options = AgentManager::Options({self_node_id,
-                                        agent_name,
-                                        agent_command_line,
-                                        /*fate_shares=*/true});
+  auto options = AgentManager::Options(
+      {self_node_id,
+       agent_name,
+       agent_command_line,
+       /*fate_shares=*/RayConfig::instance().agent_fate_share_with_raylet()});
   return std::make_unique<AgentManager>(
       std::move(options),
       /*delay_executor=*/
@@ -3172,10 +3171,11 @@ std::unique_ptr<AgentManager> NodeManager::CreateRuntimeEnvAgentManager(
 
   std::string agent_name = "runtime_env_agent";
 
-  auto options = AgentManager::Options({self_node_id,
-                                        agent_name,
-                                        agent_command_line,
-                                        /*fate_shares=*/true});
+  auto options = AgentManager::Options(
+      {self_node_id,
+       agent_name,
+       agent_command_line,
+       /*fate_shares=*/RayConfig::instance().agent_fate_share_with_raylet()});
   return std::make_unique<AgentManager>(
       std::move(options),
       /*delay_executor=*/

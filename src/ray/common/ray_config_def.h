@@ -574,6 +574,11 @@ RAY_CONFIG(uint32_t, agent_register_timeout_ms, 30 * 1000)
 /// If false, it checks the parent pid using psutil.
 RAY_CONFIG(bool, enable_pipe_based_agent_to_parent_health_check, true)
 
+/// If true, the raylet will exit when the dashboard agent or runtime env agent dies.
+/// If false, the raylet continues running even if an agent crashes, preventing agent
+/// issues (e.g. OOM from event publisher retries) from killing worker pods.
+RAY_CONFIG(bool, agent_fate_share_with_raylet, true)
+
 /// If the agent manager fails to communicate with the dashboard agent or the runtime env
 /// agent, we will retry after this interval.
 RAY_CONFIG(uint32_t, agent_manager_retry_interval_ms, 1000)
