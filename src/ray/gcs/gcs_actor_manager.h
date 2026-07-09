@@ -286,6 +286,16 @@ class GcsActorManager : public rpc::ActorInfoGcsServiceHandler,
   }
 
  private:
+  /// Records the actor-state gauge for a single (state, name) key. Shared by the
+  /// on-change callback and the per-tick re-emit in RecordMetrics so both go
+  /// through one implementation.
+  ///
+  /// \param key The (actor state, actor name) key to record.
+  /// \param value The current count for `key`, passed in by the caller (which
+  /// already has it) to avoid a redundant counter lookup.
+  void RecordActorState(
+      const std::pair<rpc::ActorTableData::ActorState, std::string> &key,
+      int64_t value) const;
   const ray::rpc::ActorDeathCause GenNodeDiedCause(
       const ray::gcs::GcsActor *actor, std::shared_ptr<const rpc::GcsNodeInfo> node);
   /// A data structure representing an actor's owner.
