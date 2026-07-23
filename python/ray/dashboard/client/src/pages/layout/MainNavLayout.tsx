@@ -3,8 +3,8 @@ import React, { useContext } from "react";
 import { RiBookMarkLine, RiFeedbackLine } from "react-icons/ri/";
 import { Outlet, Link as RouterLink } from "react-router-dom";
 import { GlobalContext } from "../../App";
-import { SearchTimezone } from "../../components/SearchComponent";
 import { IncompleteDataBanner } from "../../components/IncompleteDataBanner";
+import { SearchTimezone } from "../../components/SearchComponent";
 import Logo from "../../logo.svg";
 import {
   BANNER_HEIGHT,
@@ -84,7 +84,7 @@ const NAV_ITEMS = [
     path: "/jobs",
     id: "jobs",
   },
-{
+  {
     title: "Cluster",
     path: "/cluster",
     id: "cluster",
