@@ -50,8 +50,6 @@ export const MainNavLayout = () => {
   );
 };
 
-const BANNER_HEIGHT = 80;
-
 const Main = () => {
   const { mainNavPageHierarchy } = useContext(MainNavContext);
   const { dataComplete } = useContext(GlobalContext);
